@@ -12,7 +12,7 @@
   --bb:#6fb3d6; --bb-wash:rgba(111,179,214,.13);
   --pt:#d39a5a; --pt-wash:rgba(211,154,90,.13);
   /* category hues */
-  --c-ai:#c9a0ff; --c-web:#54b8b0; --c-android:#9cc76a; --c-ios:#8fb6e0; --c-thick:#c89be0; --c-cloud:#e0b35a; --c-ot:#e58a7a;
+  --c-ai:#c9a0ff; --c-web:#54b8b0; --c-android:#9cc76a; --c-ios:#8fb6e0; --c-thick:#c89be0; --c-network:#8aa0b8; --c-cloud:#e0b35a; --c-ot:#e58a7a;
   --shadow:0 10px 30px rgba(0,0,0,.35);
   --shadow-sm:0 4px 14px rgba(0,0,0,.28);
   --mono:'Ubuntu Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -28,7 +28,7 @@ html[data-theme="light"]{
   --crit:#b23a32; --high:#b1671f; --med:#8f7216; --low:#586b32; --info:#66625a;
   --bb:#2b6f94; --bb-wash:rgba(43,111,148,.10);
   --pt:#9a6618; --pt-wash:rgba(154,102,24,.10);
-  --c-ai:#7a4fc0; --c-web:#1f7f78; --c-android:#4f7a2a; --c-ios:#2f5f93; --c-thick:#7a4e97; --c-cloud:#9a7318; --c-ot:#b2473a;
+  --c-ai:#7a4fc0; --c-web:#1f7f78; --c-android:#4f7a2a; --c-ios:#2f5f93; --c-thick:#7a4e97; --c-network:#3f5a74; --c-cloud:#9a7318; --c-ot:#b2473a;
   --shadow:0 8px 24px rgba(60,52,40,.12);
   --shadow-sm:0 3px 10px rgba(60,52,40,.10);
 }

