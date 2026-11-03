@@ -175,10 +175,18 @@
     function detail(it){
       var d=document.createElement('div'); d.className='detail';
       function f(label,val,cls){if(!val)return ''; return '<div class="field '+(cls||'')+'"><div class="fl">'+label+'</div><p>'+esc(val)+'</p></div>';}
+      function stepsField(val){
+        if(!val) return '';
+        var parts=val.split('\n').map(function(s){return s.trim();}).filter(function(s){return s;});
+        if(parts.length<=1) return '<div class="field"><div class="fl">steps to reproduce</div><p>'+esc(val)+'</p></div>';
+        var lis=parts.map(function(p){return '<li>'+esc(p.replace(/^(\d+[\).\:\-]|[-*•])\s*/,''))+'</li>';}).join('');
+        return '<div class="field"><div class="fl">steps to reproduce</div><ol class="repro">'+lis+'</ol></div>';
+      }
       var html='';
       html+=f('what it is',it.d,'');
       html+=f('detect / params',it.det,'muted');
-      html+=f('steps',it.st,'');
+      html+=stepsField(it.st);
+      if(it.poc){html+='<div class="field pay"><div class="fl">burp poc / request</div><pre>'+esc(it.poc)+'</pre><button class="copy" data-copy="poc">copy</button></div>';}
       if(it.p){html+='<div class="field pay"><div class="fl">payloads / commands</div><pre>'+esc(it.p)+'</pre><button class="copy">copy</button></div>';}
       html+=f('impact',it.im,'muted');
       html+=f('tools',it.t,'muted');
@@ -186,8 +194,10 @@
       if(it.x){for(var kk in it.x){xm+='<span class="x"><b>'+esc(kk)+':</b> '+esc(it.x[kk])+'</span>';}}
       if(xm)html+='<div class="xmeta">'+xm+'</div>';
       d.innerHTML=html;
-      var cb=d.querySelector('.pay .copy');
-      if(cb)cb.addEventListener('click',function(){navigator.clipboard.writeText(it.p).then(function(){cb.textContent='copied';cb.classList.add('ok');setTimeout(function(){cb.textContent='copy';cb.classList.remove('ok');},1300);});});
+      d.querySelectorAll('.pay .copy').forEach(function(cb){
+        var txt=(cb.dataset.copy==='poc')?it.poc:it.p;
+        cb.addEventListener('click',function(){navigator.clipboard.writeText(txt).then(function(){cb.textContent='copied';cb.classList.add('ok');setTimeout(function(){cb.textContent='copy';cb.classList.remove('ok');},1300);});});
+      });
       return d;
     }
 

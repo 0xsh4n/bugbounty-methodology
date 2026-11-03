@@ -315,6 +315,12 @@ table.map td code{font-size:13px; color:var(--accent-ink)}
 .field pre{margin:0; background:var(--surface-2); border:1px solid var(--border-soft); border-radius:8px; padding:12px 14px; overflow-x:auto; font-family:var(--mono); font-size:13.5px; line-height:1.6; white-space:pre-wrap; word-break:break-word; position:relative}
 .field.pay{position:relative}
 .field.pay .copy{position:absolute; top:26px; right:8px}
+ol.repro{margin:4px 0 0; padding:0; list-style:none; counter-reset:step; display:flex; flex-direction:column; gap:8px}
+ol.repro li{position:relative; padding-left:34px; font-size:15.5px; line-height:1.55; color:var(--text); counter-increment:step}
+ol.repro li::before{content:counter(step); position:absolute; left:0; top:0; width:23px; height:23px;
+  display:grid; place-items:center; border-radius:7px; background:var(--surface-2); border:1px solid var(--border);
+  font-family:var(--mono); font-size:12px; font-weight:700; color:var(--accent)}
+ol.repro li code{font-size:14px; background:var(--surface-2); padding:1px 6px; border-radius:5px; color:var(--accent-ink)}
 .xmeta{display:flex; flex-wrap:wrap; gap:7px; margin-top:12px}
 .xmeta .x{font-family:var(--mono); font-size:12px; padding:3px 9px; border-radius:6px; background:var(--surface-2); border:1px solid var(--border-soft); color:var(--muted)}
 .xmeta .x b{color:var(--text); font-weight:700}
